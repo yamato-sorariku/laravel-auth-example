@@ -1,12 +1,22 @@
 version: '3'
 services:
   php:
-      build: ./Docker/app
-      volumes:
-          - .:/home/www/code
+    build: ./Docker/app
+    volumes:
+        - .:/home/www/code
+    working_dir: /home/www/code/example
+    depends_on:
+        - db
   web:
-      build: ./Docker/web
+    build: ./Docker/web
+    ports:
+        - "80:80"
+    depends_on:
+        - php
+  db:
+      image: mariadb:10
+      environment:
+            MYSQL_ROOT_PASSWORD: secret
+            MYSQL_DATABASE: test_db
       ports:
-          - "80:80"
-      depends_on:
-          - php
+          - "3306:3306"
